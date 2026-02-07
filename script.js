@@ -1,35 +1,48 @@
 const DATA_SOURCES = {
     world: [
         'https://www.pravda.com.ua/rss/view_news/',
-        'https://rss.dw.com/xml/rss-ukr-mp'
+        'https://rss.dw.com/xml/rss-ukr-mp',
+        'https://www.radiosvoboda.org/api/zsqy_eiuy-yq',
+        'https://ukrainian.voanews.com/api/zm-ye_iqti'
     ],
     physics: [
         'https://phys.org/rss-feed/physics-news/',
-        'https://www.sciencedaily.com/rss/matter_energy/physics.xml'
+        'https://www.sciencedaily.com/rss/matter_energy/physics.xml',
+        'https://www.nature.com/nphys.rss'
     ],
     tech: [
         'https://itc.ua/rss/',
-        'https://dou.ua/feed/'
+        'https://dou.ua/feed/',
+        'https://mezhua.com/feed/',
+        'https://tsn.ua/rss/techno.xml'
     ],
     bio: [
         'https://www.sciencedaily.com/rss/plants_animals/biology.xml',
-        'https://moz.gov.ua/rss'
+        'https://moz.gov.ua/rss',
+        'https://nauka.ua/rss'
     ],
     space: [
         'https://universemagazine.com/feed/',
-        'https://www.nasa.gov/rss/dyn/breaking_news.rss'
+        'https://www.nasa.gov/rss/dyn/breaking_news.rss',
+        'https://www.esa.int/rssfeed/Our_Activities/Space_Science'
     ],
     culture: [
         'https://suspilne.media/rss/culture/',
-        'https://liroom.com.ua/feed/'
+        'https://liroom.com.ua/feed/',
+        'https://vogue.ua/uk/rss/culture',
+        'https://www.the-village.com.ua/feed'
     ],
     sport: [
         'https://champion.com.ua/rss/view_news/',
-        'https://sport.ua/rss'
+        'https://sport.ua/rss',
+        'https://football.ua/rss.xml',
+        'https://ua.tribuna.com/rss/all/'
     ],
     finance: [
         'https://www.epravda.com.ua/rss/',
-        'https://biz.nv.ua/ukr/rss/finance.xml'
+        'https://biz.nv.ua/ukr/rss/finance.xml',
+        'https://minfin.com.ua/rss/news/',
+        'https://finance.ua/rss/all.xml'
     ]
 };
 
@@ -239,9 +252,9 @@ function updateHotStream() {
         }
     });
 
-    // Render top 20
+    // Render top 50
     container.innerHTML = '';
-    uniqueNews.slice(0, 20).forEach(item => {
+    uniqueNews.slice(0, 50).forEach(item => {
         const el = document.createElement('div');
         el.className = 'hot-item';
 
@@ -293,7 +306,7 @@ function renderNews(category, elementId) {
     if (!container) return;
 
     container.innerHTML = '';
-    const items = appState.news[category] ? appState.news[category].slice(0, 30) : [];
+    const items = appState.news[category] ? appState.news[category].slice(0, 50) : [];
 
     items.forEach(item => {
         const el = document.createElement('div');
