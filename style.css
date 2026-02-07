@@ -587,3 +587,24 @@ footer {
     text-transform: uppercase;
     font-weight: 900;
 }
+/* STARFIELD BACKGROUND */
+#starfield {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    background: radial-gradient(circle at center, #1b2735 0%, #090a0f 100%);
+    pointer-events: none;
+}
+
+.monitor-container {
+    position: relative;
+    background: transparent !important;
+}
+
+.module, .hot-item, .ticker-wrap, .header {
+    background-color: rgba(30, 30, 30, 0.85) !important;
+    backdrop-filter: blur(5px);
+}
