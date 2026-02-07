@@ -1,3 +1,19 @@
+// Initialize locale
+if (window.moment) {
+    moment.locale('uk');
+}
+
+const CATEGORY_NAMES_UA = {
+    world: 'Світ',
+    physics: 'Фізика',
+    tech: 'Технології',
+    bio: 'Біологія',
+    space: 'Космос',
+    culture: 'Культура',
+    sport: 'Спорт',
+    finance: 'Фінанси'
+};
+
 const DATA_SOURCES = {
     world: [
         'https://www.pravda.com.ua/rss/view_news/',
@@ -6,9 +22,9 @@ const DATA_SOURCES = {
         'https://ukrainian.voanews.com/api/zm-ye_iqti'
     ],
     physics: [
-        'https://phys.org/rss-feed/physics-news/',
-        'https://www.sciencedaily.com/rss/matter_energy/physics.xml',
-        'https://www.nature.com/nphys.rss'
+        'https://nauka.ua/rss',
+        'https://24tv.ua/rss/techno.xml',
+        'https://phys.org/rss-feed/physics-news/'
     ],
     tech: [
         'https://itc.ua/rss/',
@@ -17,14 +33,14 @@ const DATA_SOURCES = {
         'https://tsn.ua/rss/techno.xml'
     ],
     bio: [
-        'https://www.sciencedaily.com/rss/plants_animals/biology.xml',
+        'https://nauka.ua/rss',
         'https://moz.gov.ua/rss',
-        'https://nauka.ua/rss'
+        'https://life.pravda.com.ua/rss/'
     ],
     space: [
         'https://universemagazine.com/feed/',
-        'https://www.nasa.gov/rss/dyn/breaking_news.rss',
-        'https://www.esa.int/rssfeed/Our_Activities/Space_Science'
+        'https://nauka.ua/rss',
+        'https://www.nasa.gov/rss/dyn/breaking_news.rss'
     ],
     culture: [
         'https://suspilne.media/rss/culture/',
@@ -45,7 +61,6 @@ const DATA_SOURCES = {
         'https://finance.ua/rss/all.xml'
     ]
 };
-
 const UPDATE_INTERVAL = 60000; // 1 minute
 const RSS2JSON_API = 'https://api.rss2json.com/v1/api.json?rss_url=';
 
@@ -181,13 +196,15 @@ async function fetchCategory(category, elementId) {
     const fetchUrl = `${RSS2JSON_API}${encodeURIComponent(url)}`;
 
     try {
-        logSystem(`Завантаження ${category}...`);
+        const catName = CATEGORY_NAMES_UA[category] || category;
+        logSystem(`Завантаження ${catName}...`);
         const response = await fetch(fetchUrl);
         const data = await response.json();
 
         if (data.status === 'ok' && data.items.length > 0) {
             appState.news[category] = data.items;
-            logSystem(`Оновлено ${category}: ${data.items.length} матеріалів.`);
+            const catName = CATEGORY_NAMES_UA[category] || category;
+            logSystem(`Оновлено ${catName}: ${data.items.length} матеріалів.`);
 
             // Try to extract image from first item
             const item = data.items[0];
@@ -201,7 +218,8 @@ async function fetchCategory(category, elementId) {
             throw new Error(data.message || 'Елементи не знайдено');
         }
     } catch (e) {
-        logSystem(`Помилка мережі для ${category}. Резерв.`);
+        const catName = CATEGORY_NAMES_UA[category] || category;
+        logSystem(`Помилка мережі для ${catName}. Резерв.`);
         // Fallback
         if (!appState.news[category] || appState.news[category].length === 0) {
             const fallbackData = SIMULATED_NEWS[category] || [];
@@ -485,10 +503,10 @@ function initStarfield() {
     const canvas = document.getElementById('starfield');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    
+
     let width, height;
     let stars = [];
-    
+
     function resize() {
         width = window.innerWidth;
         height = window.innerHeight;
@@ -496,7 +514,7 @@ function initStarfield() {
         canvas.height = height;
         initStars();
     }
-    
+
     function initStars() {
         stars = [];
         const count = 200;
@@ -510,32 +528,32 @@ function initStarfield() {
             });
         }
     }
-    
+
     function draw() {
         ctx.clearRect(0, 0, width, height);
         ctx.fillStyle = "white";
-        
+
         stars.forEach(star => {
             ctx.globalAlpha = star.opacity;
             ctx.beginPath();
             ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
             ctx.fill();
-            
+
             star.y += star.speed;
             if (star.y > height) {
                 star.y = 0;
                 star.x = Math.random() * width;
             }
-            
+
             // Twinkle
             star.opacity += (Math.random() - 0.5) * 0.1;
             if (star.opacity < 0.2) star.opacity = 0.2;
             if (star.opacity > 1) star.opacity = 1;
         });
-        
+
         requestAnimationFrame(draw);
     }
-    
+
     window.addEventListener('resize', resize);
     resize();
     draw();
