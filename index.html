@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="uk">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>THE WALL | ГЛОБАЛЬНИЙ ІНФОРМАЦІЙНИЙ МОНІТОР</title>
+    <link rel="stylesheet" href="style.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Roboto+Mono:wght@300;400;700&family=Inter:wght@300;400;600&subset=cyrillic&display=swap"
+        rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/locale/uk.js"></script>
+</head>
+
+<body>
+    <div class="monitor-container">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo-section">
+                <h1 style="font-family: var(--font-serif); letter-spacing: -1px; font-weight: 900; font-size: 2.5rem;">
+                    THE WALL IBONARIUM NEWS</h1>
+                <div class="subtitle">ГЛОБАЛЬНИЙ СТЕНД ПОДІЙ</div>
+            </div>
+            <nav class="main-nav">
+                <div class="nav-row">
+                    <button onclick="scrollToSection('world-news')" class="nav-btn btn-society">СВІТ</button>
+                    <button onclick="scrollToSection('physics-news')" class="nav-btn btn-physics">ФІЗИКА</button>
+                    <button onclick="scrollToSection('tech-news')" class="nav-btn btn-tech">ТЕХНО</button>
+                    <button onclick="scrollToSection('bio-news')" class="nav-btn btn-bio">БІОЛОГІЯ</button>
+                    <button onclick="scrollToSection('space-news')" class="nav-btn btn-space">КОСМОС</button>
+                    <button onclick="scrollToSection('culture-news')" class="nav-btn btn-culture">КУЛЬТУРА</button>
+                    <button onclick="scrollToSection('sport-news')" class="nav-btn btn-sport">СПОРТ</button>
+                </div>
+                <div class="nav-row row-two">
+                    <button onclick="scrollToSection('culture-news')" class="nav-btn btn-accent">МИСТЕЦТВО</button>
+                    <button onclick="scrollToSection('physics-news')" class="nav-btn btn-accent">МАТЕМАТИКА</button>
+                    <button onclick="scrollToSection('finance-news')" class="nav-btn btn-accent">ФІНАНСИ</button>
+                    <button onclick="scrollToSection('bio-news')" class="nav-btn btn-accent">БІОЛОГІЯ</button>
+                    <button onclick="scrollToSection('bio-news')" class="nav-btn btn-accent">МЕДИЦИНА</button>
+                </div>
+            </nav>
+            <div class="meta-section">
+                <div id="live-clock" class="clock">00:00:00</div>
+                <div id="date-display" class="date">----</div>
+            </div>
+        </header>
+
+        <!-- TICKER -->
+        <div class="ticker-wrap">
+            <div class="ticker-heading">БЛИСКАВКА:</div>
+            <div class="ticker" id="news-ticker">
+                <div class="ticker-item">Завантаження стрічки новин...</div>
+            </div>
+        </div>
+
+        <!-- HOT STREAM (ALL NEWS) -->
+        <section class="hot-stream-section">
+            <div class="module-header header-hot">
+                <h2>НАЖИВО: ГОЛОВНИЙ ПОТІК</h2>
+                <div class="status-indicator"><span class="dot"></span> LIVE</div>
+            </div>
+            <div class="hot-stream-container" id="main-hot-stream">
+                <!-- Injected via JS -->
+            </div>
+        </section>
+
+        <!-- MAIN LAYOUT -->
+        <main class="grid-layout">
+
+            <!-- COL 1: SOCIETY (World, Politics) -->
+            <section class="grid-col col-society">
+                <div class="module large-module" id="world-news">
+                    <div class="module-header header-society">
+                        <h2>СВІТ & ПОЛІТИКА</h2>
+                        <div class="refresh-timer">Оновлення: <span id="timer-world">60</span>с</div>
+                    </div>
+                    <div class="visual-display main-visual" id="world-visual"></div>
+                    <div class="content-stream" id="world-stream"></div>
+                </div>
+            </section>
+
+            <!-- COL 2: EXACT SCIENCES (Physics, Tech) -->
+            <section class="grid-col col-physics">
+                <div class="module" id="physics-news">
+                    <div class="module-header header-physics">
+                        <h2>ФІЗИКА & МАТЕМАТИКА</h2>
+                    </div>
+                    <div class="visual-display" id="physics-visual"></div>
+                    <div class="content-stream" id="physics-stream"></div>
+                </div>
+
+                <div class="module" id="tech-news">
+                    <div class="module-header header-tech">
+                        <h2>ТЕХНОЛОГІЇ & ШІ</h2>
+                    </div>
+                    <div class="content-stream" id="tech-stream"></div>
+                </div>
+            </section>
+
+            <!-- COL 3: NATURAL SCIENCES (Bio, Space) -->
+            <section class="grid-col col-nature">
+                <div class="module" id="bio-news">
+                    <div class="module-header header-bio">
+                        <h2>БІОЛОГІЯ & МЕДИЦИНА</h2>
+                    </div>
+                    <div class="visual-display" id="bio-visual"></div>
+                    <div class="content-stream" id="bio-stream"></div>
+                </div>
+
+                <div class="module" id="space-news">
+                    <div class="module-header header-space">
+                        <h2>КОСМОС & АСТРОНОМІЯ</h2>
+                    </div>
+                    <div class="visual-display" id="space-visual"></div>
+                    <div class="content-stream" id="space-stream"></div>
+                </div>
+            </section>
+
+            <!-- COL 4: LIFESTYLE & ANALYTICS -->
+            <section class="grid-col col-lifestyle">
+                <div class="module analytics-module">
+                    <div class="module-header header-analytics">
+                        <h2>АНАЛІТИКА ТОНУ</h2>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="sentimentChart"></canvas>
+                    </div>
+                    <div class="stats-row">
+                        <div class="stat-box">
+                            <span class="stat-label">Позитив</span>
+                            <span class="stat-value positive" id="stat-pos">0%</span>
+                        </div>
+                        <div class="stat-box">
+                            <span class="stat-label">Негатив</span>
+                            <span class="stat-value negative" id="stat-neg">0%</span>
+                        </div>
+                    </div>
+                    <div class="social-indices" id="social-indices-container">
+                        <div class="index-row">
+                            <span>Індекс напруженості:</span>
+                            <span id="index-tension" class="index-val">--</span>
+                        </div>
+                        <div class="index-row">
+                            <span>Рівень довіри:</span>
+                            <span id="index-trust" class="index-val">--</span>
+                        </div>
+                        <div class="index-row">
+                            <span>Суспільний фокус:</span>
+                            <span id="index-focus" class="index-val">--</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="module" id="culture-news">
+                    <div class="module-header header-culture">
+                        <h2>КУЛЬТУРА & МИСТЕЦТВО</h2>
+                    </div>
+                    <div class="visual-display" id="culture-visual"></div>
+                    <div class="content-stream" id="culture-stream"></div>
+                </div>
+
+                <div class="module" id="finance-news">
+                    <div class="module-header header-analytics">
+                        <h2 style="color: var(--accent-cyan);">ФІНАНСИ & ЕКОНОМІКА</h2>
+                    </div>
+                    <div class="content-stream" id="finance-stream"></div>
+                </div>
+
+                <div class="module" id="sport-news">
+                    <div class="module-header header-sport">
+                        <h2>СПОРТ</h2>
+                    </div>
+                    <div class="content-stream" id="sport-stream"></div>
+                </div>
+
+                <div class="module utility-module">
+                    <div class="module-header">
+                        <h2>СИСТЕМНІ ДАНІ</h2>
+                    </div>
+                    <div class="data-log" id="system-log">
+                        <!-- Logs -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <div class="footer-content">
+                <span>Статус API: АКТИВНИЙ</span>
+                <span>Джерела: Українська Правда, Nauka.ua, Suspilne, Champion</span>
+                <span>Версія: 3.14 (СТІНА-UA)</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
